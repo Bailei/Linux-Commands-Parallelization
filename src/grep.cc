@@ -5,11 +5,15 @@
 #include "ThreadPool.h"
 #include <boost/regex.hpp>
 #include <stdio.h>
+#include <vector>
+#include <sstream>
 
+static const uint32_t nlines_per_worker = 0xf;
 static bool invert = false;
 static bool icase = false;
 static char* filename = 0;
-static
+static std::istream *in;
+static boost::regex reg_exp;
 
 static struct option long_options[] = {
   {"--file",          required_argument,  0,  'f'},
@@ -56,24 +60,63 @@ void init_args(int argc, char* argv[]){
   }
 }
 
+std::string print(std::string content){
+  std::istringstream is(content);
+  std::string result;
+  std::string line;
+
+  while(std::getline(is, line)){
+    if(regex_search(line, reg_exp))
+      result += line + "\n";
+  }
+
+  return result;
+}
+
+void run(ThreadPool &pool){ 
+  std::string line;
+  std::string lines;
+  std::vector<std::future<std::string> > results;
+  uint32_t n_lines = 0;
+
+  while(std::getline(*in, line)){
+    lines += line + "\n";
+    n_lines++;
+
+    if((n_lines & nlines_per_worker) == 0){
+     results.push_back(pool.enqueue(print, lines)); 
+     lines.clear();
+    }
+  }
+  
+  if(!lines.empty())     
+    results.push_back(pool.enqueue(print, lines)); 
+  
+  for(int i = 0; i < results.size(); ++i)
+    std::cout<<results[i].get();
+}
+
+
 int main(int argc, char *argv[]){
   
   init_args(argc, argv);
-  ThreadPool t(4);
+  ThreadPool pool(4);
   
   std::string pattern = argv[argc - 1];
   
-  if(filename)
-    in = new ifstream(filename);
-  else 
-    in = new istream;
+  if(filename){
+    in = new std::ifstream(filename);
+    if(!((std::ifstream*)in)->is_open()){
+      std::cerr<<"Can't open file "<<filename<<std::endl;
+      exit(-1); 
+    }
+  }
+  else
+    in = &std::cin;
 
-  /*
-  boost::regex e("heLLo", boost::regex_constants::grep | boost::regex::icase);
-  std::string content = "hello world!";
-
-  cout<<regex_search(content, e)<<std::endl;
-  */
+  reg_exp.assign(pattern.c_str(), boost::regex_constants::grep);
+  
+  run(pool);
   
   return 0;
 }

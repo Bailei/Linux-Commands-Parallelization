@@ -1,7 +1,7 @@
 .PHONY: clean
 CC	:= g++
 CFLAGS	:= -std=c++11
-LDFLAGS := -pthread -lboost_regex
+LDFLAGS := -lboost_regex-mt -pthread
 HEADERS	:= ThreadPool.h
 
 OBJS_GREP	:= grep.o
