@@ -1,10 +1,10 @@
 .PHONY: clean
-CC			:= g++
+CC	:= g++
 CFLAGS	:= -std=c++0x
 HEADERS	:= ThreadPool.h
 
-OBJS_GREP := grep.o
-APPS			:= grep
+OBJS_GREP	:= grep.o
+APPS	:= grep
 
 all: $(APPS)
 
