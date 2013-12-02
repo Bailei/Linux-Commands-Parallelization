@@ -1,6 +1,7 @@
 .PHONY: clean
 CC	:= g++
-CFLAGS	:= -std=c++11
+CFLAGS	:= -std=c++11 -oFast -O3
+#CFLAGS	:= -std=c++11 
 LDFLAGS := -lboost_regex-mt -pthread
 HEADERS	:= ThreadPool.h
 

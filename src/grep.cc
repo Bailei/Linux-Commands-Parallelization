@@ -8,7 +8,7 @@
 #include <vector>
 #include <sstream>
 
-static const uint32_t nlines_per_worker = 0xf;
+static const uint32_t size_per_worker = 3 * 1024 * 1024;
 static bool invert = false;
 static bool icase = false;
 static char* filename = 0;
@@ -66,7 +66,7 @@ std::string print(std::string content){
   std::string line;
 
   while(std::getline(is, line)){
-    if(regex_search(line, reg_exp))
+    if(regex_search(line, reg_exp, boost::regex_constants::match_any))
       result += line + "\n";
   }
 
@@ -74,24 +74,17 @@ std::string print(std::string content){
 }
 
 void run(ThreadPool &pool){ 
-  std::string line;
-  std::string lines;
   std::vector<std::future<std::string> > results;
-  uint32_t n_lines = 0;
+  char content[size_per_worker + 1];
+  size_t n_read;
+  std::string str;
 
-  while(std::getline(*in, line)){
-    lines += line + "\n";
-    n_lines++;
-
-    if((n_lines & nlines_per_worker) == 0){
-     results.push_back(pool.enqueue(print, lines)); 
-     lines.clear();
-    }
+  while((n_read = fread(content, 1, size_per_worker, stdin))){
+    content[n_read] = '\0';
+    str = content;
+    results.push_back(pool.enqueue(print, str));
   }
-  
-  if(!lines.empty())     
-    results.push_back(pool.enqueue(print, lines)); 
-  
+   
   for(int i = 0; i < results.size(); ++i)
     std::cout<<results[i].get();
 }
@@ -113,8 +106,12 @@ int main(int argc, char *argv[]){
   }
   else
     in = &std::cin;
+  
+  int flag = boost::regex_constants::grep;
+  if(icase)
+    flag |= boost::regex_constants::icase;
 
-  reg_exp.assign(pattern.c_str(), boost::regex_constants::grep);
+  reg_exp.assign(pattern.c_str(), flag);
   
   run(pool);
   
