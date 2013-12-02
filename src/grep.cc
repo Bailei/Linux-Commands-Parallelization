@@ -60,7 +60,7 @@ void init_args(int argc, char* argv[]){
   }
 }
 
-std::string print(std::string content){
+std::string grep_part(std::string content){
   std::istringstream is(content);
   std::string result;
   std::string line;
@@ -82,7 +82,7 @@ void run(ThreadPool &pool){
   while((n_read = fread(content, 1, size_per_worker, stdin))){
     content[n_read] = '\0';
     str = content;
-    results.push_back(pool.enqueue(print, str));
+    results.push_back(pool.enqueue(grep_part, str));
   }
    
   for(int i = 0; i < results.size(); ++i)
