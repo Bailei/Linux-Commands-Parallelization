@@ -1,6 +1,7 @@
 .PHONY: clean
 CC	:= g++
-CFLAGS	:= -std=c++0x
+CFLAGS	:= -std=c++11
+LDFLAGS := -pthread -lboost_regex
 HEADERS	:= ThreadPool.h
 
 OBJS_GREP	:= grep.o
@@ -14,10 +15,10 @@ all: $(APPS)
 	$(CC) $(CFLAGS) $< -c -o $@
 
 grep: $(OBJS_GREP) $(HEADERS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 copy: $(OBJS_COPY) $(HEADERS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 find: $(OBJS_FIND) $(HEADERS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
