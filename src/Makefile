@@ -4,7 +4,9 @@ CFLAGS	:= -std=c++0x
 HEADERS	:= ThreadPool.h
 
 OBJS_GREP	:= grep.o
-APPS	:= grep
+OBJS_COPY	:= copy.o
+OBJS_FIND	:= find.o
+APPS	:= grep copy find
 
 all: $(APPS)
 
@@ -14,6 +16,11 @@ all: $(APPS)
 grep: $(OBJS_GREP) $(HEADERS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
+copy: $(OBJS_COPY) $(HEADERS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+
+find: $(OBJS_FIND) $(HEADERS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 clean:
 	@rm -f *.o ${APPS}
