@@ -8,7 +8,8 @@ HEADERS	:= ThreadPool.h
 OBJS_GREP	:= grep.o
 OBJS_COPY	:= copy.o
 OBJS_FIND	:= find.o
-APPS	:= grep copy find
+OBJS_GZIP	:= gzip.o
+APPS	:= grep copy find gzip
 
 all: $(APPS)
 
@@ -22,6 +23,9 @@ copy: $(OBJS_COPY) $(HEADERS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 find: $(OBJS_FIND) $(HEADERS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+
+gzip: $(OBJS_GZIP) $(HEADERS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 clean:
