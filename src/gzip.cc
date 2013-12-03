@@ -90,7 +90,7 @@ int main(int argc, char *argv[]){
  
   assert(argc > 1); 
   init_args(argc, argv);
-  ThreadPool pool(4);
+  ThreadPool pool(4, 100);
   
   std::string file = argv[argc - 1];
   

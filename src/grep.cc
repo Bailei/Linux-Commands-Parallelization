@@ -92,7 +92,7 @@ void run(ThreadPool &pool){
 int main(int argc, char *argv[]){
   
   init_args(argc, argv);
-  ThreadPool pool(4);
+  ThreadPool pool(4, 100);
   
   std::string pattern = argv[argc - 1];
   

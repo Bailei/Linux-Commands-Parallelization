@@ -3,7 +3,7 @@ CC	:= g++
 CFLAGS	:= -std=c++11 -oFast -O3
 #CFLAGS	:= -std=c++11 
 LDFLAGS := -lboost_regex-mt -pthread
-HEADERS	:= ThreadPool.h
+HEADERS	:= ThreadPool.h semaphore.h
 
 OBJS_GREP	:= grep.o
 OBJS_COPY	:= copy.o

@@ -10,10 +10,12 @@
 #include <future>
 #include <functional>
 #include <stdexcept>
+#include "semaphore.h"
+//Add max queue size functionality
 
 class ThreadPool {
 public:
-    ThreadPool(size_t);
+    ThreadPool(size_t, int);
     template<class F, class... Args>
     auto enqueue(F&& f, Args&&... args) 
         -> std::future<typename std::result_of<F(Args...)>::type>;
@@ -23,7 +25,8 @@ private:
     std::vector< std::thread > workers;
     // the task queue
     std::queue< std::function<void()> > tasks;
-    
+    semaphore sem;
+
     // synchronization
     std::mutex queue_mutex;
     std::condition_variable condition;
@@ -31,8 +34,8 @@ private:
 };
  
 // the constructor just launches some amount of workers
-inline ThreadPool::ThreadPool(size_t threads)
-    :   stop(false)
+inline ThreadPool::ThreadPool(size_t threads, int queue_size)
+    :   stop(false), sem(queue_size)
 {
     for(size_t i = 0;i<threads;++i)
         workers.emplace_back(
@@ -49,6 +52,7 @@ inline ThreadPool::ThreadPool(size_t threads)
                     this->tasks.pop();
                     lock.unlock();
                     task();
+                    sem.notify();
                 }
             }
         );
@@ -59,6 +63,7 @@ template<class F, class... Args>
 auto ThreadPool::enqueue(F&& f, Args&&... args) 
     -> std::future<typename std::result_of<F(Args...)>::type>
 {
+    sem.wait();
     typedef typename std::result_of<F(Args...)>::type return_type;
     
     // don't allow enqueueing after stopping the pool
