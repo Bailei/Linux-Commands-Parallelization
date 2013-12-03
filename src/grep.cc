@@ -53,7 +53,6 @@ void init_args(int argc, char* argv[]){
         break;
 
       default:
-        printf("%s\n", optarg);
         fprintf(stderr, "Invalid arguments (%c)\n", opt);
         usage();
     }
