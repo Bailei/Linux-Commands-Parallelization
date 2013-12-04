@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <vector>
 #include <sstream>
+#include "util.h"
 
 static const uint32_t size_per_worker = 3 * 1024 * 1024;
 static bool invert = false;
@@ -92,7 +93,9 @@ void run(ThreadPool &pool){
 int main(int argc, char *argv[]){
   
   init_args(argc, argv);
-  ThreadPool pool(4, 100);
+  int n_threads = get_nthreads();
+
+  ThreadPool pool(n_threads, 100);
   
   std::string pattern = argv[argc - 1];
   

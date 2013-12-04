@@ -5,11 +5,11 @@ CFLAGS	:= -std=c++11 -oFast -O3
 LDFLAGS := -lboost_regex-mt -pthread
 HEADERS	:= ThreadPool.h semaphore.h
 
-OBJS_GREP	:= grep.o
-OBJS_COPY	:= copy.o
-OBJS_WGET	:= wget.o
-OBJS_GZIP	:= gzip.o
-OBJS_PARALLEL	:= parallel_do.o
+OBJS_GREP	:= grep.o util.o
+OBJS_COPY	:= copy.o util.o
+OBJS_WGET	:= wget.o util.o
+OBJS_GZIP	:= gzip.o util.o
+OBJS_PARALLEL	:= parallel_do.o util.o
 APPS	:= grep copy wget gzip parallel_do
 
 all: $(APPS)

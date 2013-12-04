@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <string.h>
+#include "util.h"
 
 #define MAX_BUFFER 4096
 static bool recursive = false;
@@ -90,7 +91,10 @@ int main(int argc, char *argv[]){
  
   assert(argc > 1); 
   init_args(argc, argv);
-  ThreadPool pool(4, 100);
+  
+  
+  int n_threads = get_nthreads();
+  ThreadPool pool(n_threads, 100);
   
   std::string file = argv[argc - 1];
   

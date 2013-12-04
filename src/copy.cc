@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <string.h>
+#include "util.h"
 
 static bool recursive = false;
 static std::string src;
@@ -151,7 +152,9 @@ int main(int argc, char *argv[]){
   
   assert(argc > 2);
   init_args(argc, argv);
-  ThreadPool pool(4, 100);
+  
+  int n_threads = get_nthreads();
+  ThreadPool pool(n_threads, 100);
   
   src = argv[argc - 2];
   dst = argv[argc - 1];

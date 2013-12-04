@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include "util.h"
 
 static std::istream *in;
 static char* filename = 0;
@@ -39,8 +40,7 @@ void init_args(int argc, char* argv[]){
   }
 }
 
-void parse_error(int err_id){
-  
+void parse_error(int err_id){ 
   switch(err_id){
     case SYNTAX_ERROR:
       std::cerr<<"Syntax error in the input file, please have a check."<<std::endl;
@@ -50,10 +50,8 @@ void parse_error(int err_id){
       std::cerr<<"Invalid id."<<std::endl;
       break;
   }
-
   exit(-1);
 }
-
 
 int get_lineinfo(std::string& line, int &dep_id, int& id){
   int colon_pos;
@@ -115,15 +113,16 @@ void build_commands_chain(){
   }
 }        
 
-
 void print_commands_chain(){
   for(int i = 0; i < commands.size(); ++i)
     std::cout<<commands[i]<<std::endl;
 }
 
+
 void execute_commands(std::string command){
   system(command.c_str());
 }
+
 
 void run(ThreadPool &pool){
   build_commands_chain();
@@ -134,7 +133,9 @@ void run(ThreadPool &pool){
 
 int main(int argc, char *argv[]){
   init_args(argc, argv);
-  ThreadPool pool(4, 100);
+  
+  int n_threads = get_nthreads();
+  ThreadPool pool(n_threads, 100);
   
   if(filename == 0)
     in = &std::cin;
