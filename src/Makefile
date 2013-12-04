@@ -7,9 +7,9 @@ HEADERS	:= ThreadPool.h semaphore.h
 
 OBJS_GREP	:= grep.o
 OBJS_COPY	:= copy.o
-OBJS_FIND	:= find.o
+OBJS_WGET	:= wget.o
 OBJS_GZIP	:= gzip.o
-APPS	:= grep copy find gzip
+APPS	:= grep copy wget gzip
 
 all: $(APPS)
 
@@ -22,7 +22,7 @@ grep: $(OBJS_GREP) $(HEADERS)
 copy: $(OBJS_COPY) $(HEADERS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-find: $(OBJS_FIND) $(HEADERS)
+wget: $(OBJS_WGET) $(HEADERS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 gzip: $(OBJS_GZIP) $(HEADERS)
