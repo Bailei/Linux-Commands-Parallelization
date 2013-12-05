@@ -18,3 +18,5 @@ Usage:
 ./gzip -r dir
 
 cat file | ./grep pattern
+
+./parallel_do -f input
