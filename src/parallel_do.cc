@@ -80,8 +80,8 @@ int get_lineinfo(std::string& line, int &dep_id, int& id){
 }
 
 void build_commands_chain(){
-  //map id of command to the number of it in commands chain.
-  std::map<int, int> id2no; 
+  //map id of command to the index of it in commands chain.
+  std::map<int, int> id2idx; 
   std::string line;
   int dep_id, id;
 
@@ -91,23 +91,23 @@ void build_commands_chain(){
     if(id == -1 && dep_id == -1)
       commands.push_back(line);
   
-    if(id != -1 && id2no.find(id) != id2no.end())
+    if(id != -1 && id2idx.find(id) != id2idx.end())
       parse_error(INVALID_ID);
     
-    if(dep_id != -1 && id2no.find(dep_id) == id2no.end())
+    if(dep_id != -1 && id2idx.find(dep_id) == id2idx.end())
       parse_error(INVALID_ID);
     
     if(id != -1 && dep_id != -1){
-      int dep_no = id2no[dep_id];
-      id2no[id] = dep_no;
+      int dep_no = id2idx[dep_id];
+      id2idx[id] = dep_no;
       commands[dep_no] = commands[dep_no] + ";" + line;
     }
     else if(dep_id != -1){
-      int dep_no = id2no[dep_id];
+      int dep_no = id2idx[dep_id];
       commands[dep_no] = commands[dep_no] + ";" + line;
     }
     else if(id != -1){
-      id2no[id] = commands.size();
+      id2idx[id] = commands.size();
       commands.push_back(line);
     }
   }
