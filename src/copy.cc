@@ -86,7 +86,8 @@ static struct option long_options[] = {
 };
 
 void usage(){
-  printf("Usage : \n");
+  printf("Usage : ./copy -r src_dir dst_dir\n");
+  exit(-1);
 }
 
 void init_args(int argc, char* argv[]){
@@ -149,8 +150,6 @@ void copy_directory(std::string rel_path, ThreadPool &pool){
 }
 
 int main(int argc, char *argv[]){
-  
-  assert(argc > 2);
   init_args(argc, argv);
   
   int n_threads = get_nthreads();

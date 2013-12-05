@@ -21,7 +21,8 @@ static struct option long_options[] = {
 };
 
 void usage(){
-  printf("Usage : \n");
+  printf("Usage : ./gzip -r src_dir\n");
+  exit(0);
 }
 
 void init_args(int argc, char* argv[]){
